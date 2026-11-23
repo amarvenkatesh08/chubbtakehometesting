@@ -1,0 +1,173 @@
+<testsuites id="" name="" tests="17" failures="1" skipped="0" errors="1" time="118.664944">
+<testsuite name="e2e\auth\auth.setup.js" timestamp="2026-11-23T18:26:48.484Z" hostname="auth-setup" tests="2" failures="0" skipped="0" time="18.369" errors="0">
+<testcase name="logs in once and saves the Claimant session" classname="e2e\auth\auth.setup.js" time="8.984">
+</testcase>
+<testcase name="logs in once and saves the Admin session" classname="e2e\auth\auth.setup.js" time="9.385">
+</testcase>
+</testsuite>
+<testsuite name="e2e\claimant\claim-submission.spec.js" timestamp="2026-11-23T18:26:48.484Z" hostname="claimant" tests="1" failures="0" skipped="0" time="13.961" errors="0">
+<testcase name="claimant submits a claim and sees its confirmation and details" classname="e2e\claimant\claim-submission.spec.js" time="13.961">
+<system-out>
+<![CDATA[
+[[ATTACHMENT|..\test-results\claim-submission-claimant--999cc-ts-confirmation-and-details-claimant\test-finished-1.png]]
+
+[[ATTACHMENT|..\test-results\claim-submission-claimant--999cc-ts-confirmation-and-details-claimant\video.webm]]
+]]>
+</system-out>
+</testcase>
+</testsuite>
+<testsuite name="e2e\claimant\claimant-dashboard.spec.js" timestamp="2026-11-23T18:26:48.484Z" hostname="claimant" tests="4" failures="0" skipped="0" time="28.114" errors="0">
+<testcase name="claimant can view claims and open the new-claim wizard" classname="e2e\claimant\claimant-dashboard.spec.js" time="6.224">
+<system-out>
+<![CDATA[
+[[ATTACHMENT|..\test-results\claimant-dashboard-claiman-b7a47-d-open-the-new-claim-wizard-claimant\test-finished-1.png]]
+
+[[ATTACHMENT|..\test-results\claimant-dashboard-claiman-b7a47-d-open-the-new-claim-wizard-claimant\video.webm]]
+]]>
+</system-out>
+</testcase>
+<testcase name="claim form rejects invalid incident details and description" classname="e2e\claimant\claimant-dashboard.spec.js" time="7.576">
+<system-out>
+<![CDATA[
+[[ATTACHMENT|..\test-results\claimant-dashboard-claim-f-17284-ent-details-and-description-claimant\test-finished-1.png]]
+
+[[ATTACHMENT|..\test-results\claimant-dashboard-claim-f-17284-ent-details-and-description-claimant\video.webm]]
+]]>
+</system-out>
+</testcase>
+<testcase name="claimant can keep editing a draft after requesting cancellation" classname="e2e\claimant\claimant-dashboard.spec.js" time="6.31">
+<system-out>
+<![CDATA[
+[[ATTACHMENT|..\test-results\claimant-dashboard-claiman-e805f-ter-requesting-cancellation-claimant\test-finished-1.png]]
+
+[[ATTACHMENT|..\test-results\claimant-dashboard-claiman-e805f-ter-requesting-cancellation-claimant\video.webm]]
+]]>
+</system-out>
+</testcase>
+<testcase name="claimant can discard a draft and return to their claims page" classname="e2e\claimant\claimant-dashboard.spec.js" time="8.004">
+<system-out>
+<![CDATA[
+[[ATTACHMENT|..\test-results\claimant-dashboard-claiman-2a819-return-to-their-claims-page-claimant\test-finished-1.png]]
+
+[[ATTACHMENT|..\test-results\claimant-dashboard-claiman-2a819-return-to-their-claims-page-claimant\video.webm]]
+]]>
+</system-out>
+</testcase>
+</testsuite>
+<testsuite name="e2e\admin\admin-claim-review.spec.js" timestamp="2026-11-23T18:26:48.484Z" hostname="admin" tests="2" failures="0" skipped="0" time="40.321" errors="0">
+<testcase name="admin reviews and approves a claim submitted by the claimant" classname="e2e\admin\admin-claim-review.spec.js" time="23.329">
+<system-out>
+<![CDATA[
+[[ATTACHMENT|..\test-results\admin-claim-review-admin-r-9d6be-m-submitted-by-the-claimant-admin\test-finished-2.png]]
+
+[[ATTACHMENT|..\test-results\admin-claim-review-admin-r-9d6be-m-submitted-by-the-claimant-admin\test-finished-1.png]]
+
+[[ATTACHMENT|..\test-results\admin-claim-review-admin-r-9d6be-m-submitted-by-the-claimant-admin\video.webm]]
+]]>
+</system-out>
+</testcase>
+<testcase name="admin can reject a submitted claim" classname="e2e\admin\admin-claim-review.spec.js" time="16.992">
+<system-out>
+<![CDATA[
+[[ATTACHMENT|..\test-results\admin-claim-review-admin-can-reject-a-submitted-claim-admin\test-finished-2.png]]
+
+[[ATTACHMENT|..\test-results\admin-claim-review-admin-can-reject-a-submitted-claim-admin\test-finished-1.png]]
+
+[[ATTACHMENT|..\test-results\admin-claim-review-admin-can-reject-a-submitted-claim-admin\video.webm]]
+]]>
+</system-out>
+</testcase>
+</testsuite>
+<testsuite name="api\claims-api.pw.js" timestamp="2026-11-23T18:26:48.484Z" hostname="api" tests="8" failures="1" skipped="0" time="3.694" errors="1">
+<testcase name="claimant can list claims with the documented summary schema" classname="api\claims-api.pw.js" time="0.533">
+</testcase>
+<testcase name="claimant can submit a claim with the documented response schema" classname="api\claims-api.pw.js" time="0.372">
+</testcase>
+<testcase name="claim submission returns the documented validation error for a future incident date" classname="api\claims-api.pw.js" time="0.476">
+<system-out>
+<![CDATA[
+[[ATTACHMENT|..\test-results\claims-api.pw.js-claim-sub-6ddac--for-a-future-incident-date-api\error-context.md]]
+]]>
+</system-out>
+<failure message="API response body: {&quot;timestamp&quot;:&quot;2026-11-23T18:27:13.772Z&quot;,&quot;status&quot;:500,&quot;error&quot;:&quot;Internal Server Error&quot;,&quot;path&quot;:&quot;/api/claims&quot;}" type="expect.toBe">
+<![CDATA[  [api] › api\claims-api.pw.js:46:1 › claim submission returns the documented validation error for a future incident date 
+
+    Error: API response body: {"timestamp":"2026-11-23T18:27:13.772Z","status":500,"error":"Internal Server Error","path":"/api/claims"}
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: 400
+    Received: 500
+
+      63 |     contentType: 'application/json',
+      64 |   });
+    > 65 |   expect(response.status(), `API response body: ${responseBody}`).toBe(400);
+         |                                                                   ^
+      66 |
+      67 |   const problem = ProblemDetailSchema.parse(JSON.parse(responseBody));
+      68 |   expect(problem.status).toBe(400);
+        at E:\Test demo-app-qa-main\demo-app-qa-main\tests\api\claims-api.pw.js:65:67
+
+    Error Context: ..\test-results\claims-api.pw.js-claim-sub-6ddac--for-a-future-incident-date-api\error-context.md
+]]>
+</failure>
+</testcase>
+<testcase name="claim submission rejects a missing required field" classname="api\claims-api.pw.js" time="0.359">
+</testcase>
+<testcase name="claimant is forbidden from listing all admin claims" classname="api\claims-api.pw.js" time="0.419">
+</testcase>
+<testcase name="admin can list claims with the documented claim response schema" classname="api\claims-api.pw.js" time="0.511">
+</testcase>
+<testcase name="unauthenticated requests cannot list claims" classname="api\claims-api.pw.js" time="0.345">
+</testcase>
+<testcase name="claim submission returns a documented problem response for a missing body" classname="api\claims-api.pw.js" time="0.679">
+<system-out>
+<![CDATA[
+[[ATTACHMENT|..\test-results\claims-api.pw.js-claim-sub-ce44c-response-for-a-missing-body-api\error-context.md]]
+]]>
+</system-out>
+<error message="[" type="ZodError">
+<![CDATA[  [api] › api\claims-api.pw.js:112:1 › claim submission returns a documented problem response for a missing body 
+
+    ZodError: [
+      {
+        "expected": "string",
+        "code": "invalid_type",
+        "path": [
+          "type"
+        ],
+        "message": "Invalid input: expected string, received undefined"
+      },
+      {
+        "expected": "string",
+        "code": "invalid_type",
+        "path": [
+          "title"
+        ],
+        "message": "Invalid input: expected string, received undefined"
+      },
+      {
+        "expected": "string",
+        "code": "invalid_type",
+        "path": [
+          "detail"
+        ],
+        "message": "Invalid input: expected string, received undefined"
+      }
+    ]
+
+      131 |     contentType: 'application/json',
+      132 |   });
+    > 133 |   const problem = ProblemDetailSchema.parse(JSON.parse(responseBody));
+          |                                       ^
+      134 |   expect(problem.status).toBe(400);
+      135 | });
+      136 |
+        at E:\Test demo-app-qa-main\demo-app-qa-main\tests\api\claims-api.pw.js:133:39
+
+    Error Context: ..\test-results\claims-api.pw.js-claim-sub-ce44c-response-for-a-missing-body-api\error-context.md
+]]>
+</error>
+</testcase>
+</testsuite>
+</testsuites>
