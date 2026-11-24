@@ -1,6 +1,6 @@
 # Demo App — Insurance Claims Management
 
-A three-tier microservices application used as a QA assessment platform. The app is fully functional and ships with unit tests. The QA team's task is to extend test coverage across all layers — integration, contract, E2E, load, and beyond.
+A three-tier microservices application used as a QA assessment platform. Backend services include unit tests; this assessment adds Playwright UI and API coverage.
 
 ---
 
@@ -127,13 +127,13 @@ You should see `"state": "RUNNING"` for both the connector and its task.
 
 ### What's already there
 
-The codebase ships with **unit tests** across all three tiers and scaffolding for more advanced testing types. The intent is that the QA team uses this as a starting point and builds out coverage from here.
+The backend services ship with **unit tests**; this assessment adds Playwright UI and API coverage. The project also contains scaffolding for additional testing types.
 
 | Layer | Framework | Status |
 |-------|-----------|--------|
 | Backend unit tests | JUnit 5, Mockito, AssertJ | Provided — some may need fixing |
-| Frontend unit tests | Vitest, Testing Library | Provided |
-| E2E tests | Playwright | Scaffolded — empty |
+| E2E UI tests | Playwright | JavaScript POM suite |
+| API tests | Playwright APIRequestContext | JavaScript suite using the BFF OpenAPI contract |
 | Contract tests | Pact | Scaffolded — empty |
 | Integration tests | Testcontainers | Scaffolded — empty |
 | Architecture tests | ArchUnit | Provided |
@@ -154,7 +154,7 @@ To keep the build simple and focused on the app itself, the following have been 
 
 The app is a blank canvas for testing. Suggested areas:
 
-- Fix and extend unit tests (a broken test exists as a starting point)
+- Fix and extend backend unit tests (a broken test exists as a starting point)
 - Add integration tests using Testcontainers
 - Build out Pact contract tests between BFF and Claims Service
 - Write Playwright E2E tests for the main user journeys
@@ -162,22 +162,68 @@ The app is a blank canvas for testing. Suggested areas:
 - Create a test strategy document
 - Write manual test scripts
 
-### Run existing unit tests
+### Run backend unit tests
 
 ```bash
 # Backend
 cd code/claims-service && mvn test
 cd code/bff-service && mvn test
 
-# Frontend
-cd code/demo-app-ui && npm test
 ```
 
-### Run E2E tests (requires full stack running)
+### Run Playwright tests (requires full stack running)
+
+Install the root test dependencies once:
 
 ```bash
-cd code/demo-app-ui && npx playwright test
+npm install
 ```
+
+Before running Playwright tests, configure the seeded account emails and
+passwords in the environment variables
+`PLAYWRIGHT_CLAIMANT_EMAIL`, `PLAYWRIGHT_CLAIMANT_PASSWORD`,
+`PLAYWRIGHT_ADMIN_EMAIL`, and `PLAYWRIGHT_ADMIN_PASSWORD`. Keep the values out
+of source files and commits.
+
+From the repository root, list or run the tests:
+
+```bash
+npm run test:e2e -- --list
+npm run test:ui
+npm run test:api
+npm run test:e2e
+```
+
+Playwright writes its HTML/JUnit report to root `playwright-report/` and test
+artifacts to root `test-results/`.
+The generated Claimant and Admin browser states are stored under the ignored
+root `playwright/.auth/` directory.
+The latest UI execution's screenshots and videos are also copied into the
+root `Screenshots/` and `Videos/` folders for assessment review; original
+per-test artifacts remain in `test-results/`. Screenshot and video recording
+are enabled in `playwright.config.js`.
+
+### Latest assessment execution results (2026-11-24)
+
+| Suite | Tests | Passed | Failed | Skipped | Result |
+|---|---:|---:|---:|---:|---|
+| UI | 9 | 9 | 0 | 0 | 7 Claims workflows and 2 auth setup checks passed |
+| API | 8 | 6 | 2 | 0 | Two reproduced API contract defects |
+
+The UI run's actual media is in `Screenshots/` (9 PNG files) and `Videos/` (7
+WebM files). The API run's two failures are documented as DEF-API-001 and
+DEF-API-002 in `assessment/DEFECT-REPORT.md`; the JUnit report records one
+assertion failure and one schema-validation error.
+
+The assessment-provided Test Case and Defect templates were not present in the
+workspace. `assessment/TEST-CASES.md` and `assessment/DEFECT-REPORT.md` use
+self-created replacement templates based on the checklist requirements; they
+are not presented as supplied originals. Exact compliance with the missing
+templates cannot be verified.
+
+Run these commands from the repository root. The shared configuration is
+`playwright.config.js`; UI application source and its dev server remain in
+`code/demo-app-ui`.
 
 ---
 
@@ -232,3 +278,13 @@ docker compose -f docker-compose.apps.yml up --build --pull never claims-service
 docker compose -f docker-compose.apps.yml up --build --pull never bff-service
 docker compose -f docker-compose.apps.yml up --build --pull never ui
 ```
+
+## Assessment Submission
+
+- AI Journal: `assessment/AI-JOURNAL.md`
+- Architecture Diagram and document: `architecture-diagram.excalidraw` and `ARCHITECTURE.md`
+- Test Strategy: `assessment/TEST-STRATEGY.md`
+- Test Cases: `assessment/TEST-CASES.md`
+- Playwright UI Tests: `tests/e2e`
+- API Tests: `tests/api`
+- Defect Report: `assessment/DEFECT-REPORT.md`

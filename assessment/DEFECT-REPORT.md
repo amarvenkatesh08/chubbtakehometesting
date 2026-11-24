@@ -47,9 +47,17 @@
   {"timestamp":"2026-11-23T18:25:14.720Z","status":500,"error":"Internal Server Error","path":"/api/claims"}
   ```
 
-  Automated response evidence and assertion are also in
-  [Playwright error context](../test-results/claims-api.pw.js-claim-sub-6ddac--for-a-future-incident-date-api/error-context.md)
-  and the [JUnit report](../playwright-report/results.xml).
+  **Latest reproduction (2026-11-24 08:00:43Z):** The authenticated API test
+  again received HTTP 500 for the future-date request. The response was:
+
+  ```json
+  {"timestamp":"2026-11-24T08:00:43.233Z","status":500,"error":"Internal Server Error","path":"/api/claims"}
+  ```
+
+  The automated request and assertion are in
+  [claims-api.pw.js](../tests/api/claims-api.pw.js). The latest Playwright
+  failure is preserved in
+  [error-context.md](../test-results/claims-api.pw.js-claim-sub-6ddac--for-a-future-incident-date-api/error-context.md).
 
 ## DEF-API-002 — Missing-body error omits required ProblemDetail fields
 
@@ -96,19 +104,36 @@
   ```
 
   Schema validation reports the `type`, `title`, and `detail` fields missing.
-  The failed assertion and test context are in
-  [Playwright error context](../test-results/claims-api.pw.js-claim-sub-ce44c-response-for-a-missing-body-api/error-context.md)
-  and the [JUnit report](../playwright-report/results.xml).
+  **Latest reproduction (2026-11-24):** The authenticated request again
+  returned HTTP 400, then Zod validation failed because `type`, `title`, and
+  `detail` were undefined. The latest CLI output did not include the full raw
+  response body; the earlier raw response above remains the captured body
+  evidence. The automated request and assertion are in
+  [claims-api.pw.js](../tests/api/claims-api.pw.js), and the latest failure is
+  preserved in
+  [error-context.md](../test-results/claims-api.pw.js-claim-sub-ce44c-response-for-a-missing-body-api/error-context.md).
 
 ## Template note
 
 The assessment-provided defect template was not present in the inspected
-workspace. The report includes each required field listed in the assessment
-instructions; exact template compliance cannot be confirmed without that
-template.
+workspace. This report is a self-created replacement based on the checklist
+requirements and includes the required fields; it is not presented as the
+supplied original. Exact compliance with the unavailable template cannot be
+verified.
 
 ## Summary
 
-Two genuine API contract defects were confirmed. No UI application defect was
-confirmed. These findings are based on the observed BFF responses and the
-checked-in API contract; no application source code was changed.
+Two API contract defects were reproduced during the 2026-11-23 and
+2026-11-24 Playwright API runs and are documented above with request/response
+and schema-validation evidence. No UI application defect was confirmed. No
+application source code was changed.
+
+## Retest note (2026-11-24)
+
+An initial targeted rerun stopped in the API fixture because the claimant
+environment variables were not set; that attempt did not reach the
+application. A subsequent authenticated API run on 2026-11-24 executed all
+eight API tests: six passed and both defect cases failed on actual application
+responses. The failures are therefore reproduced application contract defects,
+not setup failures. The full JUnit result is in
+[results.xml](../playwright-report/results.xml).

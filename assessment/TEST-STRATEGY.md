@@ -21,10 +21,10 @@ the application and Docker configuration unchanged.
 | Test runner | Playwright Test 1.65.1, JavaScript | One `playwright.config.js` |
 | Browser | Playwright Chromium | Headed for UI tests |
 
-Use the seeded accounts `claimant@demo.com` and `admin@demo.com`. Passwords
-are supplied through `PLAYWRIGHT_CLAIMANT_PASSWORD` and
-`PLAYWRIGHT_ADMIN_PASSWORD`; optional email overrides are supported. Do not put
-password values in source or assessment documents.
+Use the seeded accounts configured through `PLAYWRIGHT_CLAIMANT_EMAIL`,
+`PLAYWRIGHT_CLAIMANT_PASSWORD`, `PLAYWRIGHT_ADMIN_EMAIL`, and
+`PLAYWRIGHT_ADMIN_PASSWORD`. All four variables are required by the UI and API
+test fixtures. Do not put credential values in source or assessment documents.
 
 ## Scope
 
@@ -68,7 +68,8 @@ password values in source or assessment documents.
 5. Execute UI and API suites separately and together. Preserve actual failures
    as evidence; do not make a failing test pass by weakening the contract.
 6. Generate an HTML and JUnit report. Capture a screenshot and video for each
-   UI test.
+   claimant/admin workflow test; disable media capture in the authentication
+   setup project.
 
 ## Execution results
 
@@ -83,12 +84,29 @@ password values in source or assessment documents.
 - The latest complete run after refreshing the API defect evidence also
   resulted in **15 passed and 2 failed**, with the same two API contract
   failures; all auth setup and UI workflow tests passed again.
+- On 2026-11-24, the UI and API suite commands were attempted separately after
+  the functional suites were clarified. The first attempt found no Compose
+  project services; existing assessment containers were running under another
+  Compose project and caused a container-name conflict when startup was
+  attempted. The API endpoint then became reachable, while local UI startup
+  initially failed because the ignored generated OpenAPI client was absent.
+- The UI package's existing `generate:api` command generated the ignored client
+  required to run Next.js. The first UI run then exposed a timing-sensitive
+  invalid-date test; after changing that test to open the wizard from the
+  already-loaded claims page, the UI suite passed **9/9** (7 workflow cases
+  plus 2 auth setup checks).
+- The API suite passed **6/8**. The future-date test again received HTTP 500
+  rather than 400, and the empty-body test again found missing required
+  `ProblemDetail` fields. Thus the split latest result is **15 passed, 2
+  failed**; the two API failures remain the documented application defects.
 - The future-incident-date request returned HTTP 500 instead of the expected
   HTTP 400. The empty-body request returned HTTP 400 but omitted the required
   `type`, `title`, and `detail` fields from `ProblemDetail`.
 - The Playwright HTML and JUnit reports were generated. The latest run produced
   9 PNG screenshots and 7 videos; two Admin workflows use two pages and
   therefore produced an additional screenshot apiece.
+- Copies of those latest UI captures are organized in root `Screenshots/` and
+  `Videos/`; originals remain under their per-test folders in `test-results/`.
 - Both auth setup tests generated the ignored Claimant and Admin storage-state
   files under `playwright/.auth/`.
 - ESLint passed for the UI and API automation JavaScript files.
@@ -97,6 +115,36 @@ password values in source or assessment documents.
 - The six UI workflow tests created persistent claim records in the assessment
   stack in the earlier run. The latest UI and API executions also submit
   claims, so additional records persist in the assessment database.
+
+### Latest review verification (2026-11-24)
+
+- `npm run test:e2e -- --list` discovered **17 tests**: 2 authentication setup
+  checks, 7 UI workflow cases, and 8 API cases.
+- An initial `npm run test:ui` attempt stopped at authentication setup because
+  the role email/password environment variables were not configured; the 7
+  dependent UI workflow tests did not run in that attempt.
+- After the credentials were configured in the user's environment, a
+  successful `npm run test:ui` run completed **9/9 tests** (2 auth setup checks
+  and 7 UI workflow cases), with **0 failures**. The JUnit result records a
+  duration of about 119 seconds. This confirms the UI automation passed; no
+  UI application defect was observed.
+- An initial targeted API attempt stopped in the claimant authentication
+  fixture before sending requests because credentials were not configured.
+  After the credentials were supplied, the full API run executed all 8 cases:
+  **6 passed and 2 failed**. The future-date case reproduced HTTP 500 instead
+  of HTTP 400; the missing-body case returned HTTP 400 but failed `ProblemDetail`
+  schema validation because `type`, `title`, and `detail` were absent.
+- The latest split-suite result is **15 passed, 2 failed**: UI 9/9 passed and
+  API 6/8 passed. Both API failures are confirmed defects documented in
+  `DEFECT-REPORT.md`; the current JUnit report records 8 tests, 1 assertion
+  failure, and 1 schema-validation error.
+- The successful UI run produced 9 PNG screenshots and 7 WebM videos under
+  `test-results/`. These actual artifacts were copied into the root
+  `Screenshots/` and `Videos/` folders using filenames tied to each test
+  result; the copied files were hash-verified against their sources.
+- The root Playwright configuration already enables screenshot and video
+  recording for the claimant/admin UI projects. The auth setup project
+  intentionally disables media capture so login setup is not recorded.
 
 ## Test data approach
 
@@ -121,7 +169,7 @@ password values in source or assessment documents.
 | Kafka/CDC mode can affect realtime notifications | Duplicate or delayed events | CDC is optional; use the default direct Kafka mode unless explicitly testing CDC |
 | Claim status transitions are constrained | Tests may request an invalid transition | Use the domain-supported transitions documented in source |
 | Some UI actions are placeholders | Tests could assert functionality that does not exist | Treat admin details and upload as limitations, not implemented flows |
-| Exact assessment templates are absent from the checked project files | Cannot verify exact template compliance | Keep the requested fields, mark template-dependent work as pending, and request the supplied template before final submission |
+| Supplied assessment templates are absent from the checked project files | Cannot compare with the original format | Use self-created replacements based on the checklist; clearly state that exact compliance cannot be verified without the originals |
 
 ## Entry criteria
 
@@ -145,6 +193,8 @@ password values in source or assessment documents.
 - No unresolved critical/high defect remains unless explicitly accepted by the
   assessment owner.
 
-The final two criteria are not yet met: API contract tests currently expose
-confirmed error-response discrepancies, and the assessment-provided test-case
-and defect templates were not found in the inspected project folder.
+The exit criteria for having no unresolved high-priority defects are not met:
+the API contract tests expose confirmed response discrepancies. The
+assessment-provided templates were not found; the self-created replacements
+cover the required checklist fields, but exact compliance with the originals
+cannot be verified.

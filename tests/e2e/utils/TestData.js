@@ -2,12 +2,10 @@ import path from 'node:path';
 
 const accounts = {
   claimant: {
-    email: 'claimant@demo.com',
     emailVariable: 'PLAYWRIGHT_CLAIMANT_EMAIL',
     passwordVariable: 'PLAYWRIGHT_CLAIMANT_PASSWORD',
   },
   admin: {
-    email: 'admin@demo.com',
     emailVariable: 'PLAYWRIGHT_ADMIN_EMAIL',
     passwordVariable: 'PLAYWRIGHT_ADMIN_PASSWORD',
   },
@@ -27,10 +25,12 @@ export function credentialsFor(role) {
     throw new Error(`Unsupported test role: ${role}`);
   }
 
-  const email = process.env[account.emailVariable] || account.email;
+  const email = process.env[account.emailVariable];
   const password = process.env[account.passwordVariable];
-  if (!password) {
-    throw new Error(`Set ${account.passwordVariable} to the demo ${role} password before running E2E tests.`);
+  if (!email || !password) {
+    throw new Error(
+      `Set ${account.emailVariable} and ${account.passwordVariable} before running E2E tests.`
+    );
   }
 
   return { email, password };

@@ -13,7 +13,8 @@ test('claim form rejects invalid incident details and description', async ({
   claimantPage,
   claimSubmissionPage,
 }) => {
-  await claimSubmissionPage.goto();
+  await claimantPage.openNewClaimWizard();
+  await expect(claimantPage.page.getByRole('heading', { name: 'Incident Details' })).toBeVisible();
   await expect(claimantPage.page).toHaveURL(/\/claims\/new$/);
 
   await expect(claimSubmissionPage.nextButton).toBeDisabled();

@@ -12,7 +12,7 @@
 # Error details
 
 ```
-Error: API response body: {"timestamp":"2026-11-23T18:27:13.772Z","status":500,"error":"Internal Server Error","path":"/api/claims"}
+Error: API response body: {"timestamp":"2026-11-24T08:00:43.233Z","status":500,"error":"Internal Server Error","path":"/api/claims"}
 
 expect(received).toBe(expected) // Object.is equality
 
@@ -88,7 +88,7 @@ Received: 500
   63  |     contentType: 'application/json',
   64  |   });
 > 65  |   expect(response.status(), `API response body: ${responseBody}`).toBe(400);
-      |                                                                   ^ Error: API response body: {"timestamp":"2026-11-23T18:27:13.772Z","status":500,"error":"Internal Server Error","path":"/api/claims"}
+      |                                                                   ^ Error: API response body: {"timestamp":"2026-11-24T08:00:43.233Z","status":500,"error":"Internal Server Error","path":"/api/claims"}
   66  | 
   67  |   const problem = ProblemDetailSchema.parse(JSON.parse(responseBody));
   68  |   expect(problem.status).toBe(400);

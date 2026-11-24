@@ -996,3 +996,358 @@ run
   absent.
 - Latest artifacts and reports are in root `test-results/` and
   `playwright-report/`.
+
+## Aligning documented test cases with Playwright automation
+
+### Exact prompt
+
+````text
+**Test Automation**
+make changes as per below described
+- 5 to 10 automated test cases for the Claims application.
+- Both positive and negative scenarios.
+- The automated tests must match the test cases documented in your Test Case template.
+You already have Playwright tests in your `tests` folder. Check that your test cases are documented in the assessment and that the names and scenarios match the automated tests.
+````
+
+### Changes and verification
+
+- Updated `assessment/TEST-CASES.md` so each UI and API case heading matches
+  the exact Playwright `test()` title. Adjusted the draft-discard expected
+  result to the behavior actually asserted by the test.
+- The suite has 7 Claims UI workflow tests and 2 auth-session setup tests
+  (9 UI automated cases total), covering positive and negative scenarios;
+  the 8 API cases remain separately documented.
+- Ran a static title-to-case comparison across all UI/setup/API test files:
+  **17 automated tests and 17 documented cases matched**, with no missing or
+  extra titles. No test cases were executed for this documentation-only
+  alignment.
+- The assessment-provided template is still unavailable in the workspace.
+  The existing requested case fields are retained and exact external-template
+  compliance remains disclosed as unverified.
+
+## Functional test suite scope clarification and execution attempt
+
+### Exact prompt
+
+````text
+There are two test suites for Functional Testing. The test cases documented in the Test Case template need to be automated. Please automate 5 to 10 test cases for the Claims application, covering both positive and negative scenarios.
+````
+
+### Changes and verification
+
+- Made the two functional suites explicit in `assessment/TEST-CASES.md`:
+  UI and API. The UI suite contains 7 Claims workflow tests, including
+  positive and negative cases; the API suite is separate and contains 8 cases.
+  The two auth-session setup checks are supporting tests and are excluded from
+  the 7 workflow-case count.
+- Kept existing automation rather than duplicating tests. The seven workflow
+  scenarios already exist in `tests/e2e`; API automation is in `tests/api`.
+- Static comparison confirmed exact Playwright test-title to case-heading
+  matches for all 17 automated tests, including the two auth setup tests.
+- Attempted `npm run test:ui` and `npm run test:api` separately. The UI run
+  timed out waiting for the configured Next.js server; all 8 API test
+  executions received `ECONNREFUSED` at `localhost:8090`. `docker compose ps`
+  showed no assessment containers running. No application behavior was
+  exercised in this attempt; no new defect was inferred.
+- The last successful functional UI execution remains the prior full run with
+  all 7 workflow tests and both auth setup tests passing. The latest full run
+  with services running recorded 15 passed and the same 2 known API contract
+  failures.
+
+## Retrying the functional test suites with services available
+
+### Exact prompt
+
+````text
+can you try to execute now
+````
+
+### Execution and changes
+
+- `docker compose ps` initially showed no services for the current Compose
+  project. Starting the stack hit a name conflict with existing
+  `demo-zookeeper`; inspection showed the assessment containers were already
+  running under another Compose project. No containers were removed or
+  replaced. The UI container did not publish its port to localhost, while the
+  BFF was reachable on port 8090.
+- API suite run: **6 passed, 2 failed**. The future-date response was HTTP 500
+  instead of 400; the empty-body response was HTTP 400 but failed the required
+  `ProblemDetail` schema.
+- The first UI attempt revealed the ignored generated OpenAPI runtime was
+  absent, preventing local Next.js compilation. Ran the UI package's existing
+  `npm run generate:api`; it generated ignored files under
+  `code/demo-app-ui/src/lib/api/generated` without changing tracked app source.
+- The subsequent UI run passed **8/9**, exposing that the invalid-date check
+  navigated directly into the wizard before client hydration. Changed that test
+  to open the wizard from the already-loaded Claimant page and updated its
+  documented preconditions/steps.
+- Reran the UI suite: **9/9 passed** (7 workflow tests and 2 auth-session
+  checks). Screenshots/videos were generated under root `test-results/`.
+- The latest split-suite total is **15 passed, 2 known API contract failures**.
+  The latest HTML/JUnit output is for the final UI run; the API defects remain
+  documented with request/response evidence in `DEFECT-REPORT.md`.
+
+## Organizing UI execution screenshots and videos
+
+### Exact prompt
+
+````text
+UI Tests – Create separate Screenshots and Videos folders and add the execution screenshots and videos. Ensure screenshot and video capture are enabled in the Playwright configuration file (playwright.config).
+````
+
+### Changes and verification
+
+- Confirmed root `playwright.config.js` already enables both
+  `screenshot: 'on'` and `video: 'on'`; no config change was needed.
+- Copied the latest successful UI run's **9 PNG screenshots** into root
+  `Screenshots/` and **7 WebM videos** into root `Videos/`. Filenames include
+  their Playwright test-result folder name for traceability.
+- Preserved all original artifacts in root `test-results/`. Verified source
+  artifact counts remain 9 PNGs and 7 WebM files after copying.
+- Updated the root README and Test Strategy to document the dedicated evidence
+  folders. No tests were rerun for this file-organization change.
+
+## Reviewer feedback follow-up — defect reporting and evidence
+
+### Prompt 15
+
+````text
+For each defect confirmed during Playwright execution, create a defect report using the Defect Template.
+
+Include:
+
+- Defect ID
+- Title
+- Environment
+- Steps to reproduce
+- Expected result
+- Actual result
+- Severity and priority
+- Screenshot or video evidence
+Do not report a test failure as a confirmed application defect until you have checked and reproduced it.
+````
+
+### Prompt 16
+
+````text
+1. Keep to accept the updated Defect Report.
+2. Create the two required folders in your project:
+
+- `Screenshots`
+- `Videos`
+3. Copy the existing Playwright screenshots into `Screenshots` and `.webm` files into `Videos`.
+4. Check your test cases document to ensure 5–10 documented cases match your automated Playwright tests, covering positive and negative scenarios.
+5. Check that the Defect Report file is saved in your `assessment` folder.
+````
+
+### Prompt 17
+
+````text
+– Create separate Screenshots and Videos folders and add the execution screenshots and videos. Ensure screenshot and video capture are enabled in the Playwright configuration file (playwright.config). this was one right ?
+````
+
+### Prompt 18
+
+````text
+total how many screen shots
+````
+
+### Prompt 19
+
+````text
+which covers ?
+````
+
+### Prompt 20
+
+````text
+Screen shots for UI tests only ?
+````
+
+### Prompt 21
+
+````text
+for all ui tets all sscreenshots are captured for all postive and negative cases
+````
+
+### Prompt 22
+
+````text
+For vieos ?
+````
+
+## Reviewer feedback follow-up — full assessment request
+
+### Prompt 23
+
+````text
+I received the following reviewer feedback for my Chubb APAC QA take-home assessment. Please inspect my existing project and update it to satisfy the reviewer comments.
+
+REVIEWER FEEDBACK:
+
+1. Test Automation:
+There are two test suites for Functional Testing. The test cases documented in the Test Case template need to be automated. Please automate 5 to 10 test cases for the Claims application, covering both positive and negative scenarios.
+2. UI Tests:
+Create separate Screenshots and Videos folders and add the execution screenshots and videos. Ensure screenshot and video capture are enabled in the Playwright configuration file (playwright.config).
+3. API Tests:
+Completed.
+4. Defect Reporting:
+Any defects identified during Playwright test execution should be documented and reported using the Defect Template.
+Overall comment:
+Most deliverables have been completed. Focus on completing Playwright UI automation for the Claims application, capturing evidence (screenshots/videos), and reporting identified defects using the prescribed template.
+
+TASK INSTRUCTIONS:
+
+1. Inspect the existing project, assessment documents, Test Case template, Defect Template, Playwright configuration, and existing test suites before making changes.
+2. Do not recreate the project or delete existing completed work.
+3. Identify the two functional test suites and the test cases documented in the Test Case template.
+4. Automate 5 to 10 documented Claims application test cases using Playwright.
+
+- Include positive and negative scenarios.
+- Use meaningful test names.
+- Use Page Object Model where appropriate.
+- Use stable locators and proper assertions.
+- Avoid fixed sleeps.
+- Reuse existing fixtures and test utilities.
+- Do not hardcode credentials; use environment variables.
+5. Configure Playwright to capture screenshots and videos during test execution.
+
+- Inspect the existing playwright.config.js first.
+- If screenshot and video capture are already enabled, do not change them unnecessarily.
+- Create separate top-level folders named Screenshots and Videos.
+- Copy actual execution screenshots and videos into these folders.
+- Do not create fake or placeholder evidence.
+6. Execute the UI tests against the actual Claims application if the application and credentials are available.
+
+- If execution is blocked by missing credentials, application availability, or environment setup, clearly document the blocker.
+- Do not claim tests passed unless they were actually executed successfully.
+- Do not fabricate screenshots, videos, test results, or defect evidence.
+7. Inspect all Playwright test failures.
+
+- Determine whether each failure is an application defect, test automation issue, or environment/setup blocker.
+- Reproduce defects where possible.
+- Document confirmed defects using the existing Defect Template.
+- Include reproduction steps, expected result, actual result, environment, severity, priority, and actual evidence.
+- Do not report an unconfirmed failure as a confirmed defect.
+8. Preserve the completed API tests and existing API defect documentation. Do not modify or remove API tests unnecessarily.
+9. Update the assessment documentation to show which documented test cases are automated and their execution status.
+10. Maintain the AI working journal according to the assessment requirements. Record prompts exactly as used and document which AI suggestions were accepted, modified, or rejected.
+11. After making changes, provide:
+
+- List of files created or modified.
+- Number of UI test cases automated.
+- Positive and negative scenarios covered.
+- Actual test execution summary.
+- Locations of screenshots and videos.
+- Confirmed defects and their report locations.
+- Any remaining blockers or incomplete requirements.
+IMPORTANT:
+Do not push to GitHub automatically.
+Do not delete existing files.
+Do not claim full compliance if any requirement remains incomplete.
+First inspect the project, then make the necessary changes, and finally verify the results.
+````
+
+### Decisions and verification for this review
+
+| Reviewer request / decision | Outcome | Notes |
+|---|---|---|
+| Complete 5–10 UI cases | Accepted using existing work | Kept the 7 existing UI workflow tests; no duplicate tests were created. |
+| Enable screenshot and video capture | Accepted as already configured | Root config has both enabled for claimant/admin UI projects; auth setup capture remains off. |
+| Keep separate evidence folders | Accepted; existing files preserved | The 9 PNGs and 7 WebM files are nonempty artifacts from the prior successful UI run. The blocked current run did not create replacement evidence. |
+| Use environment variables for account credentials | Accepted and tightened | Removed the UI helper's hardcoded demo-email fallbacks; UI login now requires both role email and password environment variables. |
+| Update automated-case status | Accepted | Added per-case status summaries for UI and API cases in `TEST-CASES.md`, including the current blocked rerun. |
+| Use the supplied Test Case and Defect templates | Modified due missing files | A repository search found no separate brief/template files; the deliverables retain the specified fields and disclose that exact-template compliance cannot be verified. |
+| Report failures only after reproduction | Accepted | The initial UI and targeted API attempts were blocked by missing credentials. After credentials were supplied, UI passed and the full API run reproduced both existing API defects; no unconfirmed failure was reported. |
+
+No suggestions were rejected. Exact wording for earlier assistant suggestions
+is unavailable in the retained conversation, so no assistant quotation has
+been invented.
+
+### User-provided successful UI execution evidence
+
+The user shared a terminal screenshot showing `npm run test:ui` completed with
+9 passed. The result was corroborated against the generated JUnit report
+(`tests="9"`, `failures="0"`, `skipped="0"`) and the current test-result media
+(9 PNGs and 7 WebM files). Those actual artifacts were copied into the
+test-specific root `Screenshots/` and `Videos/` folders and verified by SHA-256
+hash. The screenshot contained an account password; it was not copied into
+assessment files or repeated in this journal. The message had no text prompt
+to transcribe.
+
+## User-provided API execution output
+
+The user supplied the latest API Playwright output on 2026-11-24. It reported
+8 tests, 6 passed, and 2 failed. Inspection of the generated JUnit report and
+error contexts confirmed both prior API defects reproduced: the future-date
+request received HTTP 500 instead of 400, and the empty-body response failed
+the required `ProblemDetail` schema for missing `type`, `title`, and `detail`.
+The result was added to the API test-case status, Test Strategy, and Defect
+Report. This message was test output rather than a prompt; its evidence is
+preserved in `playwright-report/results.xml` and `test-results/`.
+
+## Final assessment verification follow-up
+
+### Prompt 24
+
+````text
+## Final Assessment Verification – 1.**Test Automation:** There are two functional test suites. Automate 5–10 test cases documented in the Test Case template, covering both positive and negative scenarios.
+2. **UI Tests:** Create separate `Screenshots` and `Videos` folders and save execution screenshots and videos. Ensure screenshot and video capture are enabled in `playwright.config.js`.
+3. **API Tests:** Completed. Do not unnecessarily modify the completed API tests.
+4. **Defect Reporting:** Document any defects identified during Playwright execution using the Defect Template.
+Overall reviewer comment: Most deliverables are complete. Focus on Playwright UI automation, execution evidence, and defect reporting.
+
+### Tasks
+
+1. Inspect the existing project and identify the functional test suites and documented test cases.
+2. Verify that 5–10 relevant UI test cases are automated, including positive and negative scenarios.
+3. Verify that the tests use Page Object Model, stable locators, meaningful assertions, and no fixed sleeps.
+4. Verify `playwright.config.js` has screenshot and video capture enabled.
+5. Ensure actual execution evidence is saved in separate `Screenshots/` and `Videos/` folders.
+6. Run the UI tests against the running Claims application using the configured environment credentials. Do not hardcode or print passwords.
+7. If tests fail because credentials or services are unavailable, clearly report the blocker. Do not classify setup failures as application defects.
+8. Review the existing API test results and defect reports. Do not claim previously reported defects are currently reproduced unless a new test confirms them.
+9. For every confirmed defect, include reproduction steps, expected result, actual result, severity, priority, environment, and relevant request/response or screenshot evidence.
+10. Check whether the required Test Case and Defect templates are available. If not, clearly state that and use a professional self-created template without claiming it was supplied.
+11. Verify all seven assessment deliverables and update the README with the actual test execution summary.
+
+### Final report
+Provide:
+
+- Number of UI tests automated
+- Positive and negative scenario count
+- Exact latest test execution result: passed, failed, skipped
+- Location of screenshots and videos
+- Confirmed defects and their evidence
+- Any remaining blockers
+````
+
+### Decisions and verification
+
+| Request | Outcome | Notes |
+|---|---|---|
+| Verify UI automation and quality | Accepted | Seven workflow tests are documented; the latest recorded UI run passed 7/7 workflow tests plus both auth setup checks. POMs and assertions are in use; no fixed sleep calls were found. |
+| Verify capture and evidence | Accepted | Configuration already enables screenshot/video for claimant/admin projects. The 9 PNG and 7 WebM files in root evidence folders are actual media from the successful UI run. |
+| Preserve API tests and report confirmed failures | Accepted | No API test source was changed. The latest API run had 6 passes and reproduced both reported API defects. |
+| Update README and disclose blockers | Accepted | README now records the latest suite results and missing-template limitation. A new UI rerun was not attempted because credentials are absent from this tool environment and localhost:3001 is not running; the previously successful user run was verified from its output/report. |
+| Use exact templates only if available | Modified due unavailable files | No supplied templates were found; existing reports disclose that exact-template compliance cannot be confirmed. |
+
+No suggestions were rejected. No credential values from the user's console
+were recorded.
+
+## Replacement template clarification
+
+### Prompt 25
+
+````text
+The assessment checklist refers to provided Test Case and Defect Report templates. However, no templates were available in the supplied assessment files. To continue the assessment, I created replacement templates based on the checklist requirements. Exact compliance with the original templates could not be verified because they were not provided.
+````
+
+### Decision
+
+Accepted. `assessment/TEST-CASES.md` and `assessment/DEFECT-REPORT.md` are
+identified as self-created replacement templates based on checklist fields,
+not as supplied originals. The README and Test Strategy were aligned with this
+clarification; exact compliance remains unverifiable until the original
+templates are provided.
